@@ -1,20 +1,12 @@
 
-export default function handler(req, res) {
-  const users = [
-    {
-      firstName: "יוסי",
-      lastName: "כהן",
-      email: "kaikov@gmail.com",
-      role: "admin",
-      permission: "מנהל מערכת"
-    },
-    {
-      firstName: "דנה",
-      lastName: "לוי",
-      email: "dana@example.com",
-      role: "support",
-      permission: "צופה"
-    }
-  ];
-  res.status(200).json(users);
+import { db } from "@/lib/firebase-admin";
+
+export default async function handler(req, res) {
+  try {
+    const snapshot = await db.collection("users").get();
+    const users = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
