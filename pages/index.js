@@ -1,0 +1,1 @@
+// index.js – redirect to /admin
